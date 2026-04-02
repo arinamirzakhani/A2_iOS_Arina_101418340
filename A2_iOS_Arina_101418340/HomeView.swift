@@ -7,32 +7,30 @@ struct HomeView: View {
         animation: .default
     ) private var products: FetchedResults<Product>
 
-    @State private var currentIndex: Int = 0
+    @State private var currentIndex = 0
 
     var body: some View {
-        NavigationStack {
+        NavigationView {
             VStack(spacing: 20) {
                 Text("Product Viewer")
                     .font(.largeTitle)
-                    .fontWeight(.bold)
+                    .bold()
 
-                if products.isEmpty {
-                    Text("No products available")
-                        .foregroundColor(.gray)
-                } else {
-                    let currentProduct = products[currentIndex]
+                if !products.isEmpty {
+                    let product = products[currentIndex]
 
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Product ID: \(currentProduct.productID)")
-                        Text("Name: \(currentProduct.name ?? "")")
-                        Text("Description: \(currentProduct.productDescription ?? "")")
-                        Text(String(format: "Price: $%.2f", currentProduct.price))
-                        Text("Provider: \(currentProduct.provider ?? "")")
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("ID: \(product.productID)")
+                        Text("Name: \(product.name ?? "")")
+                        Text("Description: \(product.productDescription ?? "")")
+                        Text("Price: $\(product.price, specifier: "%.2f")")
+                        Text("Provider: \(product.provider ?? "")")
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
-                    .background(.gray.opacity(0.1))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color(.systemGray6))
                     .cornerRadius(12)
+                    .padding(.horizontal)
 
                     HStack(spacing: 20) {
                         Button("Previous") {
@@ -40,7 +38,6 @@ struct HomeView: View {
                                 currentIndex -= 1
                             }
                         }
-                        .buttonStyle(.borderedProminent)
                         .disabled(currentIndex == 0)
 
                         Button("Next") {
@@ -48,15 +45,27 @@ struct HomeView: View {
                                 currentIndex += 1
                             }
                         }
-                        .buttonStyle(.borderedProminent)
                         .disabled(currentIndex == products.count - 1)
                     }
+                    .padding(.top)
 
-                    Text("Showing \(currentIndex + 1) of \(products.count)")
-                        .foregroundColor(.secondary)
+                } else {
+                    Text("No products available.")
+                        .foregroundColor(.gray)
                 }
 
                 Spacer()
+
+                VStack(spacing: 4) {
+                    Text("Arina Mirzakhani")
+                        .font(.footnote)
+                        .fontWeight(.semibold)
+
+                    Text("Student ID: 101418340")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.bottom, 10)
             }
             .padding()
             .navigationTitle("Home")
