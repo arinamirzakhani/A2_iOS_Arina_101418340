@@ -1,57 +1,61 @@
-//
-//  Persistence.swift
-//  A2_iOS_Arina_101418340
-//
-//  Created by amir sayad on 2026-04-02.
-//
-
 import CoreData
 
 struct PersistenceController {
     static let shared = PersistenceController()
 
-    @MainActor
-    static let preview: PersistenceController = {
-        let result = PersistenceController(inMemory: true)
-        let viewContext = result.container.viewContext
-        for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-        }
-        do {
-            try viewContext.save()
-        } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
-        return result
-    }()
-
     let container: NSPersistentContainer
 
     init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "A2_iOS_Arina_101418340")
-        if inMemory {
-            container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
-        }
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error as NSError? {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
 
-                /*
-                 Typical reasons for an error here include:
-                 * The parent directory does not exist, cannot be created, or disallows writing.
-                 * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-                 * The device is out of space.
-                 * The store could not be migrated to the current model version.
-                 Check the error message to determine what the actual problem was.
-                 */
+        if inMemory {
+            container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
+        }
+
+        container.loadPersistentStores { _, error in
+            if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
-        })
+        }
+
         container.viewContext.automaticallyMergesChangesFromParent = true
+        seedProductsIfNeeded()
+    }
+
+    private func seedProductsIfNeeded() {
+        let context = container.viewContext
+        let request: NSFetchRequest<Product> = Product.fetchRequest()
+
+        do {
+            let count = try context.count(for: request)
+            if count == 0 {
+                let sampleProducts = [
+                    (1, "iPhone 15", "Apple smartphone with advanced camera", 1299.99, "Apple"),
+                    (2, "MacBook Air", "Lightweight laptop for students and work", 1499.99, "Apple"),
+                    (3, "iPad Air", "Tablet for study and entertainment", 899.99, "Apple"),
+                    (4, "AirPods Pro", "Wireless earbuds with noise cancellation", 329.99, "Apple"),
+                    (5, "Apple Watch", "Smart watch for health tracking", 549.99, "Apple"),
+                    (6, "Samsung Galaxy S24", "Android smartphone with powerful features", 1199.99, "Samsung"),
+                    (7, "Dell XPS 13", "Compact laptop with premium build quality", 1599.99, "Dell"),
+                    (8, "Sony WH-1000XM5", "Noise cancelling over-ear headphones", 499.99, "Sony"),
+                    (9, "Canon EOS R50", "Mirrorless camera for creators", 999.99, "Canon"),
+                    (10, "Nintendo Switch", "Hybrid gaming console for home and travel", 399.99, "Nintendo")
+                ]
+
+                for item in sampleProducts {
+                    let product = Product(context: context)
+                    product.id = UUID()
+                    product.productID = Int64(item.0)
+                    product.name = item.1
+                    product.productDescription = item.2
+                    product.price = item.3
+                    product.provider = item.4
+                }
+
+                try context.save()
+            }
+        } catch {
+            print("Failed to seed products: \(error.localizedDescription)")
+        }
     }
 }

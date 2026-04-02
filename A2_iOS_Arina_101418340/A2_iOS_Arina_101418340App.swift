@@ -1,10 +1,3 @@
-//
-//  A2_iOS_Arina_101418340App.swift
-//  A2_iOS_Arina_101418340
-//
-//  Created by amir sayad on 2026-04-02.
-//
-
 import SwiftUI
 
 @main
