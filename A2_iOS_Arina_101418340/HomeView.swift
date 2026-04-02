@@ -17,6 +17,10 @@ struct HomeView: View {
                     .bold()
 
                 if !products.isEmpty {
+                    Text("Product \(currentIndex + 1) of \(products.count)")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+
                     let product = products[currentIndex]
 
                     VStack(alignment: .leading, spacing: 10) {
