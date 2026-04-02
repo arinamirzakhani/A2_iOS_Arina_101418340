@@ -27,4 +27,4 @@ The app manages product information including:
 - Xcode
 
 ## GitHub Repository
-(Your repo link here)
+https://github.com/arinamirzakhani/A2_iOS_Arina_101418340.git
