@@ -4,78 +4,61 @@ import CoreData
 struct AddProductView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
-    @State private var productID: String = ""
-    @State private var name: String = ""
-    @State private var productDescription: String = ""
-    @State private var price: String = ""
-    @State private var provider: String = ""
+    @State private var productID = ""
+    @State private var name = ""
+    @State private var productDescription = ""
+    @State private var price = ""
+    @State private var provider = ""
 
-    @State private var showAlert = false
-    @State private var alertMessage = ""
+    var isFormValid: Bool {
+        !productID.trimmingCharacters(in: .whitespaces).isEmpty &&
+        !name.trimmingCharacters(in: .whitespaces).isEmpty &&
+        !productDescription.trimmingCharacters(in: .whitespaces).isEmpty &&
+        !price.trimmingCharacters(in: .whitespaces).isEmpty &&
+        !provider.trimmingCharacters(in: .whitespaces).isEmpty
+    }
 
     var body: some View {
-        NavigationStack {
+        NavigationView {
             Form {
                 Section(header: Text("Product Information")) {
-                    TextField("Product ID", text: $productID)
+                    TextField("Enter Product ID", text: $productID)
                         .keyboardType(.numberPad)
 
-                    TextField("Product Name", text: $name)
-                    TextField("Product Description", text: $productDescription)
-                    TextField("Price", text: $price)
+                    TextField("Enter Product Name", text: $name)
+
+                    TextField("Enter Product Description", text: $productDescription)
+
+                    TextField("Enter Product Price", text: $price)
                         .keyboardType(.decimalPad)
 
-                    TextField("Provider", text: $provider)
+                    TextField("Enter Product Provider", text: $provider)
                 }
 
                 Section {
-                    Button("Add Product") {
-                        addProduct()
+                    Button("Save Product") {
+                        let newProduct = Product(context: viewContext)
+                        newProduct.productID = Int16(productID) ?? 0
+                        newProduct.name = name
+                        newProduct.productDescription = productDescription
+                        newProduct.price = Double(price) ?? 0.0
+                        newProduct.provider = provider
+
+                        do {
+                            try viewContext.save()
+                            productID = ""
+                            name = ""
+                            productDescription = ""
+                            price = ""
+                            provider = ""
+                        } catch {
+                            print("Error saving product: \(error)")
+                        }
                     }
+                    .disabled(!isFormValid)
                 }
             }
             .navigationTitle("Add Product")
-            .alert("Message", isPresented: $showAlert) {
-                Button("OK", role: .cancel) { }
-            } message: {
-                Text(alertMessage)
-            }
-        }
-    }
-
-    private func addProduct() {
-        guard let productIDValue = Int64(productID),
-              let priceValue = Double(price),
-              !name.isEmpty,
-              !productDescription.isEmpty,
-              !provider.isEmpty else {
-            alertMessage = "Please fill in all fields correctly."
-            showAlert = true
-            return
-        }
-
-        let newProduct = Product(context: viewContext)
-        newProduct.id = UUID()
-        newProduct.productID = productIDValue
-        newProduct.name = name
-        newProduct.productDescription = productDescription
-        newProduct.price = priceValue
-        newProduct.provider = provider
-
-        do {
-            try viewContext.save()
-            alertMessage = "Product added successfully."
-
-            productID = ""
-            name = ""
-            productDescription = ""
-            price = ""
-            provider = ""
-
-            showAlert = true
-        } catch {
-            alertMessage = "Failed to save product."
-            showAlert = true
         }
     }
 }
