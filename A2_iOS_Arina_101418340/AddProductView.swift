@@ -19,6 +19,14 @@ struct AddProductView: View {
         !provider.trimmingCharacters(in: .whitespaces).isEmpty
     }
 
+    func clearForm() {
+        productID = ""
+        name = ""
+        productDescription = ""
+        price = ""
+        provider = ""
+    }
+
     var body: some View {
         NavigationView {
             Form {
@@ -47,17 +55,17 @@ struct AddProductView: View {
 
                         do {
                             try viewContext.save()
-                            productID = ""
-                            name = ""
-                            productDescription = ""
-                            price = ""
-                            provider = ""
+                            clearForm()
                             showSuccessAlert = true
                         } catch {
                             print("Error saving product: \(error)")
                         }
                     }
                     .disabled(!isFormValid)
+
+                    Button("Reset Form", role: .destructive) {
+                        clearForm()
+                    }
                 }
             }
             .navigationTitle("Add Product")
