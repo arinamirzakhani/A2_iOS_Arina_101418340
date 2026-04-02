@@ -9,6 +9,7 @@ struct SearchView: View {
 
     @State private var searchText: String = ""
 
+    // Filter logic
     var filteredProducts: [Product] {
         if searchText.isEmpty {
             return Array(products)
@@ -25,28 +26,46 @@ struct SearchView: View {
     var body: some View {
         NavigationStack {
             VStack {
+                // 🔍 Search bar
                 TextField("Search by name or description", text: $searchText)
                     .textFieldStyle(.roundedBorder)
                     .padding()
 
-                List {
-                    ForEach(filteredProducts) { product in
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text(product.name ?? "Unknown Product")
-                                .font(.headline)
+                // 📋 Results
+                if filteredProducts.isEmpty {
+                    
+                    Spacer()
+                    
+                    Text("No products found")
+                        .foregroundColor(.gray)
+                        .font(.headline)
+                    
+                    Spacer()
+                } else {
+                    List {
+                        ForEach(filteredProducts) { product in
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text(product.name ?? "Unknown Product")
+                                    .font(.headline)
 
-                            Text(product.productDescription ?? "No description")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
+                                Text(product.productDescription ?? "No description")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
 
-                            Text("Provider: \(product.provider ?? "")")
-                                .font(.caption)
+                                Text("Provider: \(product.provider ?? "")")
+                                    .font(.caption)
+                            }
+                            .padding(.vertical, 4)
                         }
-                        .padding(.vertical, 4)
                     }
                 }
             }
             .navigationTitle("Search")
         }
     }
+}
+
+#Preview {
+    SearchView()
+        .environment(\.managedObjectContext, PersistenceController.shared.container.viewContext)
 }
