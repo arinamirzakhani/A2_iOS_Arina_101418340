@@ -8,10 +8,10 @@ struct ProductListView: View {
     ) private var products: FetchedResults<Product>
 
     var body: some View {
-        NavigationStack {
+        NavigationView {
             List {
                 ForEach(products) { product in
-                    VStack(alignment: .leading, spacing: 6) {
+                    VStack(alignment: .leading, spacing: 8) {
                         Text(product.name ?? "Unknown Product")
                             .font(.headline)
 
@@ -19,10 +19,16 @@ struct ProductListView: View {
                             .font(.subheadline)
                             .foregroundColor(.secondary)
 
-                        Text(String(format: "$%.2f", product.price))
-                            .font(.caption)
+                        HStack {
+                            Text("Provider: \(product.provider ?? "Unknown")")
+                            Spacer()
+                            Text("$\(product.price, specifier: "%.2f")")
+                                .fontWeight(.semibold)
+                        }
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
                     }
-                    .padding(.vertical, 4)
+                    .padding(.vertical, 6)
                 }
             }
             .navigationTitle("All Products")
