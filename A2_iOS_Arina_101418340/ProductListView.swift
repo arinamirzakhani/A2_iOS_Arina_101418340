@@ -9,26 +9,33 @@ struct ProductListView: View {
 
     var body: some View {
         NavigationView {
-            List {
-                ForEach(products) { product in
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(product.name ?? "Unknown Product")
-                            .font(.headline)
+            VStack {
+                Text("Total Products: \(products.count)")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .padding(.top, 8)
 
-                        Text(product.productDescription ?? "No description")
-                            .font(.subheadline)
+                List {
+                    ForEach(products) { product in
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(product.name ?? "Unknown Product")
+                                .font(.headline)
+
+                            Text(product.productDescription ?? "No description")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+
+                            HStack {
+                                Text("Provider: \(product.provider ?? "Unknown")")
+                                Spacer()
+                                Text("$\(product.price, specifier: "%.2f")")
+                                    .fontWeight(.semibold)
+                            }
+                            .font(.footnote)
                             .foregroundColor(.secondary)
-
-                        HStack {
-                            Text("Provider: \(product.provider ?? "Unknown")")
-                            Spacer()
-                            Text("$\(product.price, specifier: "%.2f")")
-                                .fontWeight(.semibold)
                         }
-                        .font(.footnote)
-                        .foregroundColor(.secondary)
+                        .padding(.vertical, 6)
                     }
-                    .padding(.vertical, 6)
                 }
             }
             .navigationTitle("All Products")
