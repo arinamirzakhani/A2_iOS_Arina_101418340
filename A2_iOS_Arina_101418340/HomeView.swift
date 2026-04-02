@@ -47,7 +47,12 @@ struct HomeView: View {
                     )
                     .padding(.horizontal)
 
-                    HStack(spacing: 20) {
+                    HStack(spacing: 12) {
+                        Button("First") {
+                            currentIndex = 0
+                        }
+                        .disabled(currentIndex == 0)
+
                         Button("Previous") {
                             if currentIndex > 0 {
                                 currentIndex -= 1
@@ -61,7 +66,13 @@ struct HomeView: View {
                             }
                         }
                         .disabled(currentIndex == products.count - 1)
+
+                        Button("Last") {
+                            currentIndex = products.count - 1
+                        }
+                        .disabled(currentIndex == products.count - 1)
                     }
+                    .buttonStyle(.bordered)
                 } else {
                     VStack(spacing: 12) {
                         Image(systemName: "tray")
