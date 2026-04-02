@@ -47,7 +47,7 @@ struct AddProductView: View {
                 Section {
                     Button("Save Product") {
                         let newProduct = Product(context: viewContext)
-                        newProduct.productID = Int16(productID) ?? 0
+                        newProduct.productID = Int64(productID) ?? 0
                         newProduct.name = name
                         newProduct.productDescription = productDescription
                         newProduct.price = Double(price) ?? 0.0
