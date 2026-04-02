@@ -9,6 +9,7 @@ struct AddProductView: View {
     @State private var productDescription = ""
     @State private var price = ""
     @State private var provider = ""
+    @State private var showSuccessAlert = false
 
     var isFormValid: Bool {
         !productID.trimmingCharacters(in: .whitespaces).isEmpty &&
@@ -51,6 +52,7 @@ struct AddProductView: View {
                             productDescription = ""
                             price = ""
                             provider = ""
+                            showSuccessAlert = true
                         } catch {
                             print("Error saving product: \(error)")
                         }
@@ -59,6 +61,11 @@ struct AddProductView: View {
                 }
             }
             .navigationTitle("Add Product")
+            .alert("Success", isPresented: $showSuccessAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Product saved successfully.")
+            }
         }
     }
 }
