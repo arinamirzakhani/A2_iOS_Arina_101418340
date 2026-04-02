@@ -23,9 +23,17 @@ struct SearchView: View {
     var body: some View {
         NavigationView {
             VStack {
-                TextField("Search by name or description", text: $searchText)
-                    .textFieldStyle(.roundedBorder)
-                    .padding()
+                HStack {
+                    TextField("Search by name or description", text: $searchText)
+                        .textFieldStyle(.roundedBorder)
+
+                    if !searchText.isEmpty {
+                        Button("Clear") {
+                            searchText = ""
+                        }
+                    }
+                }
+                .padding()
 
                 List {
                     ForEach(filteredProducts) { product in
