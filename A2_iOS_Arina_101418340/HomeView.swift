@@ -23,17 +23,28 @@ struct HomeView: View {
 
                     let product = products[currentIndex]
 
-                    VStack(alignment: .leading, spacing: 10) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(product.name ?? "Unknown Product")
+                            .font(.title2)
+                            .fontWeight(.bold)
+
+                        Divider()
+
                         Text("ID: \(product.productID)")
-                        Text("Name: \(product.name ?? "")")
                         Text("Description: \(product.productDescription ?? "")")
                         Text("Price: $\(product.price, specifier: "%.2f")")
                         Text("Provider: \(product.provider ?? "")")
                     }
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Color(.systemGray6))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Color(.systemGray4), lineWidth: 1)
+                    )
                     .padding(.horizontal)
 
                     HStack(spacing: 20) {
