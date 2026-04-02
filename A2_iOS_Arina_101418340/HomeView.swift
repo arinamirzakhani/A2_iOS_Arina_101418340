@@ -47,11 +47,24 @@ struct HomeView: View {
                         }
                         .disabled(currentIndex == products.count - 1)
                     }
-                    .padding(.top)
-
                 } else {
-                    Text("No products available.")
-                        .foregroundColor(.gray)
+                    VStack(spacing: 12) {
+                        Image(systemName: "tray")
+                            .font(.system(size: 40))
+                            .foregroundColor(.gray)
+
+                        Text("No products available")
+                            .font(.headline)
+
+                        Text("Please add a product from the Add tab.")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(12)
+                    .padding(.horizontal)
                 }
 
                 Spacer()
